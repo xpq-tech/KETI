@@ -1,0 +1,27 @@
+alg_name: "UNKE"
+model_name: "/science/llms/Llama-2-13b-chat-hf"
+device: 0
+model_parallel: true
+
+
+ex_data_path: './data/alpaca_data.json'
+
+debug: false
+keep_original_weight: true
+
+
+lr: 0.0002
+batch_size: 1
+layers: [31]
+ln_f_module: 'model.norm'
+lm_head_module: 'lm_head'
+layer_module_tmp: 'model.layers.{}'
+
+
+v_loss_layer: 39
+v_lr: 0.5
+v_num_grad_steps: 25
+v_weight_decay: 0.001
+clamp_norm_factor: 4
+optim_num_step: 100
+ex_data_num: 20

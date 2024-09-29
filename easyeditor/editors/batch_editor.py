@@ -1,0 +1,37 @@
+from enum import Enum
+
+
+class BatchEditor(Enum):
+    CALINET = 'CALINET'
+    SERAC = 'SERAC'
+    KE = 'KE'
+    MEND = 'MEND'
+    MEMIT = 'MEMIT'
+    PMET = 'PMET'
+    FT = 'FT'
+    LoRA = 'LoRA'
+    KN = 'KN'
+    EMMET = "EMMET"
+    GRACE = "GRACE"
+    WISE = "WISE"
+    UNKE = "UNKE"
+    non_edit = "non-edit"
+
+
+    @staticmethod
+    def is_batchable_method(alg_name: str):
+        return alg_name == BatchEditor.CALINET.value \
+            or alg_name == BatchEditor.SERAC.value \
+            or alg_name == BatchEditor.KE.value \
+            or alg_name == BatchEditor.MEND.value \
+            or alg_name == BatchEditor.MEMIT.value \
+            or alg_name == BatchEditor.PMET.value \
+            or alg_name == BatchEditor.FT.value \
+            or alg_name == BatchEditor.KN.value \
+            or alg_name == BatchEditor.LoRA.value \
+            or alg_name == BatchEditor.EMMET.value \
+            or alg_name == BatchEditor.GRACE.value \
+            or alg_name == BatchEditor.WISE.value \
+            or alg_name == BatchEditor.UNKE.value \
+            or alg_name == BatchEditor.non_edit.value
+

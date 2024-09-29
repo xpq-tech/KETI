@@ -1,0 +1,4 @@
+alg_name: "non-edit"
+model_name: "/science/llms/Llama-2-13b-chat-hf"
+device: 0
+model_parallel: false
