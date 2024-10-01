@@ -1,10 +1,11 @@
-# Knowledge Editing Intention Detection (KEID)
+# KETI
+This is the repository for our paper [Identifying Knowledge Editing Types in Large Language Models](https://arxiv.org/abs/2409.19663).
 
 ## Requirements
 
 #### 🔧 Installation via Pip and Conda
 
-**Note: Please use Python 3.9+ for KEID**
+**Note: Please use Python 3.9+ for KETI**
 
 To get started, install Conda and run the following:
 
