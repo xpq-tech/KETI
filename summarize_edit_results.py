@@ -5,7 +5,7 @@ import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--res_dir', default='./results', type=str)
+    parser.add_argument('--res_dir', default='./results/edit', type=str)
     args = parser.parse_args()
     # 读取 JSON 文件
     for json_file in glob.glob(os.path.join(args.res_dir, '*.json')):

@@ -10,6 +10,8 @@ import torch
 torch.manual_seed(42)
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 import seaborn as sns
 import matplotlib.pyplot as plt
 plt.rcParams['font.family'] = 'Times New Roman'
@@ -46,9 +48,9 @@ def plot_confusion_matrix(cm, class_names, save_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--method', default='MLP', choices=['linear', 'MLP', 'LDA', 'LogR'], type=str)
+    parser.add_argument('--method', default='MLP', choices=['linear', 'MLP', 'LDA', 'LogR', 'AdaBoost'], type=str)
     parser.add_argument('--edit_method', default='ft', choices=['ft','grace','unke'], type=str)
-    parser.add_argument('--edited_llm', default='llama3.1-8b',  choices=['llama3.1-8b','llama2-13b'], type=str)
+    parser.add_argument('--edited_llm', default='llama3.1-8b',  choices=['llama3.1-8b','llama2-13b', "qwen2.5-7b", "gpt2-xl"], type=str)
     parser.add_argument('--feature_dir', default='./features', type=str)
     parser.add_argument('--rephrased', default=False, action="store_true")
     parser.add_argument('--test_feature', default=None,  choices=['ft','grace','unke', 'non-edit'])
@@ -184,6 +186,9 @@ if __name__ == "__main__":
             model = LDA()
         elif args.method == "LogR":
             model = LogisticRegression( solver='lbfgs', max_iter=1000)
+        elif args.method == "AdaBoost":
+            base_clf = DecisionTreeClassifier()  # 基础分类器
+            model = AdaBoostClassifier(base_estimator=base_clf, n_estimators=50, algorithm='SAMME.R', random_state=42)
         else:
             raise NotImplementedError(f"{args.method} not implemented")
         LOG.info(f"Use {args.method} classifier")
@@ -202,8 +207,8 @@ if __name__ == "__main__":
     f1 = f1_score(testset_labels, predictions, average='macro')
 
     conf_matrix = confusion_matrix(testset_labels, predictions)
-    eval_res = f'Accuracy: {accuracy:.3f}\n' + f'Precision: {precision:.3f}\n' + f'Recall: {recall:.3f}\n' + f'F1 Score: {f1:.3f}' + f'Confusion Matrix:\n{conf_matrix}'
-    with open(f"./results/{args.method}_{args.edit_method}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
+    eval_res = f'Accuracy: {accuracy:.3f}\n' + f'Precision: {precision:.3f}\n' + f'Recall: {recall:.3f}\n' + f'F1 Score: {f1:.3f}' + f'\nConfusion Matrix:\n{conf_matrix}'
+    with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/'}{args.method}_{args.edit_method}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
         file.write(eval_res)
     print(eval_res)
     # 2. 输出混淆矩阵

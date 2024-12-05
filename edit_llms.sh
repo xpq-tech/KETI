@@ -2,14 +2,38 @@
 #     --editing_method=FT \
 #     --hparams_dir=./hparams/FT/llama3.1-8b > logs/ft_llama3.1-8b.log &
 
+# CUDA_VISIBLE_DEVICES=2 nohup python edit_main.py \
+#     --editing_method=FT \
+#     --hparams_dir=./hparams/FT/gpt2-xl > logs/ft_gpt2-xl.log &
+
+# CUDA_VISIBLE_DEVICES=3 nohup python edit_main.py \
+#     --editing_method=FT \
+#     --hparams_dir=./hparams/FT/qwen2.5-7b > logs/ft_qwen2.5-7b.yaml.log &
 
 # CUDA_VISIBLE_DEVICES=0 nohup python edit_main.py \
 #     --editing_method=GRACE \
 #     --hparams_dir=./hparams/GRACE/llama3.1-8b > logs/grace_llama3.1-8b.log &
 
-# CUDA_VISIBLE_DEVICES=1 nohup python edit_main.py \
+# CUDA_VISIBLE_DEVICES=3 nohup python edit_main.py \
+#     --editing_method=GRACE \
+#     --hparams_dir=./hparams/GRACE/gpt2-xl > logs/grace_gpt2-xl.log &
+
+
+# CUDA_VISIBLE_DEVICES=3 nohup python edit_main.py \
+#     --editing_method=GRACE \
+#     --hparams_dir=./hparams/GRACE/qwen2.5-7b > logs/grace_qwen2.5-7b.yaml.log &
+
+# CUDA_VISIBLE_DEVICES=3 nohup python edit_main.py \
+#     --editing_method=UNKE \
+#     --hparams_dir=./hparams/UNKE/qwen2.5-7b > logs/unke_qwen2.5-7b.log &
+
+# CUDA_VISIBLE_DEVICES=2 nohup python edit_main.py \
 #     --editing_method=UNKE \
 #     --hparams_dir=./hparams/UNKE/llama3.1-8b > logs/unke_llama3.1-8b.log &
+
+CUDA_VISIBLE_DEVICES=0,3 nohup python edit_main.py \
+    --editing_method=UNKE \
+    --hparams_dir=./hparams/UNKE/gpt2-xl > logs/unke_gpt2-xl.log &
 
 # CUDA_VISIBLE_DEVICES=6 nohup python edit_main.py \
 #     --editing_method=FT \
@@ -19,7 +43,7 @@
 #     --editing_method=GRACE \
 #     --hparams_dir=./hparams/GRACE/llama2-13b > logs/grace_llama2-13b.log &
 
-# CUDA_VISIBLE_DEVICES=4,5,6 nohup python edit_main.py \
+# CUDA_VISIBLE_DEVICES=0,5,4 nohup python edit_main.py \
 #     --editing_method=UNKE \
 #     --hparams_dir=./hparams/UNKE/llama2-13b > logs/unke_llama2-13b.log &
 
@@ -33,3 +57,12 @@
 # CUDA_VISIBLE_DEVICES=4 nohup python edit_main.py \
 #     --editing_method=non-edit \
 #     --hparams_dir=./hparams/NON_EDIT/llama2-13b > logs/non_edit_llama2-13b.log &
+
+# CUDA_VISIBLE_DEVICES=1 nohup python edit_main.py \
+#     --editing_method=non-edit \
+#     --hparams_dir=./hparams/NON_EDIT/gpt2-xl > logs/non_edit_gpt2-xl.log &
+
+
+# CUDA_VISIBLE_DEVICES=6 nohup python edit_main.py \
+#     --editing_method=non-edit \
+#     --hparams_dir=./hparams/NON_EDIT/qwen2.5-7b.yaml > logs/non_edit_qwen2.5-7b.log &

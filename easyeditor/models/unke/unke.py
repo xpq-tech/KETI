@@ -187,17 +187,25 @@ def execute_batch_unke(
         if 'llama' in config.model_name.lower():
             input_causal_mask,input_position_ids,input_cache_position = get_causal_mask(layer_in_ks,contexts_tok['attention_mask'])
             ex_causal_mask,ex_position_ids,ex_cache_position = get_causal_mask(stat_in,ex_tok['attention_mask'])
-        elif config.model_name == 'Qwen1.5-7B-Chat':
+        elif 'qwen' or 'gpt' in config.model_name.lower():
             input_causal_mask,input_position_ids = get_qwen2_causal_mask(layer_in_ks,contexts_tok['attention_mask'])
             ex_causal_mask,ex_position_ids = get_qwen2_causal_mask(stat_in,ex_tok['attention_mask'])
-
+        else:
+            raise NotImplementedError(f"Model {config.model_name} not implement")
        
         for step in range(config.optim_num_step):
             optimizer.zero_grad()
-            if 'llama' in config.model_name.lower():
+            if 'qwen'  in config.model_name.lower():
                 loss = criterion(_layer(stat_in,attention_mask=ex_causal_mask,position_ids=ex_position_ids)[0], stat_out)+ criterion(_layer(layer_in_ks,attention_mask=input_causal_mask,position_ids=input_position_ids)[0], layer_out_ks)
-            elif config.model_name == 'LLama2-7B-Chat':
+            elif 'llama' in config.model_name.lower():
                 loss = criterion(_layer(stat_in,attention_mask=ex_causal_mask,position_ids=ex_position_ids,cache_position = ex_cache_position)[0], stat_out)+ criterion(_layer(layer_in_ks,attention_mask=input_causal_mask,position_ids=input_position_ids,cache_position=input_cache_position)[0], layer_out_ks)
+            elif 'gpt2' in config.model_name.lower():
+                loss = criterion(_layer(stat_in,attention_mask=ex_causal_mask)[0], stat_out)+ criterion(_layer(layer_in_ks,attention_mask=input_causal_mask)[0], layer_out_ks)
+            else:
+                raise NotImplementedError(f"Model {config.model_name} not implement")
+                
+            
+
             loss.backward(retain_graph=True)
             optimizer.step()    
             

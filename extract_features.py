@@ -1,8 +1,6 @@
 from easyeditor import BaseEditor, FTHyperParams, GraceHyperParams, KEIDDataset
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import json
 from tqdm import tqdm
 import numpy as np
@@ -23,7 +21,7 @@ type_mapping = {
     "Bias injection": 5
 }
 
-def get_features(prompt, more_tokens=5, top_k=1):
+def get_features(prompt, more_tokens=5, top_k=1, use_attention_mask = False):
     inp_tok = tokenizer(prompt, return_tensors="pt",add_special_tokens=False,).to(edited_model.device)
 
     input_ids, attention_mask = inp_tok["input_ids"], inp_tok["attention_mask"]
@@ -40,6 +38,7 @@ def get_features(prompt, more_tokens=5, top_k=1):
         while input_ids.size(1) < max_out_len:  # while not exceeding max output length
             model_out = edited_model(
                 input_ids=input_ids[:, cur_context],
+                attention_mask=attention_mask[:, cur_context] if use_attention_mask else None,
                 past_key_values=past_key_values,
                 use_cache=True,
                 output_hidden_states=True
@@ -111,14 +110,14 @@ def get_features_all_hs(prompt):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--edit_method', default='ft',choices=['ft','grace','unke', 'non-edit'], type=str)
-    parser.add_argument('--edited_llm', default='llama3.1-8b', choices=['llama3.1-8b','llama2-13b'], type=str)
+    parser.add_argument('--edited_llm', default='qwen2.5-7b', choices=['llama3.1-8b','llama2-13b', 'qwen2.5-7b', 'gpt2-xl'], type=str)
     parser.add_argument('--feature_dir', default='./features', type=str)
     parser.add_argument('--more_tokens', default=6, type=int)
     parser.add_argument('--rephrased', default=False, action="store_true")
     parser.add_argument('--log_level', default='INFO', type=str)
     parser.add_argument('--edited_model_dir', default='./edited_model', type=str)
-    parser.add_argument('--pretrained_model_path', default="/science/llms/", type=str)
-    parser.add_argument('--all_hidden_states', default=True, action="store_true")
+    parser.add_argument('--pretrained_model_path', default="/data/llms/", type=str)
+    parser.add_argument('--all_hidden_states', default=False, action="store_true")
 
 
     args = parser.parse_args()
@@ -130,9 +129,12 @@ if __name__ == "__main__":
 
     if args.edited_llm == "llama3.1-8b":
         tokenizer = AutoTokenizer.from_pretrained(f"{args.pretrained_model_path}/Meta-Llama-3.1-8B-Instruct")
-    else:
+    elif args.edited_llm == "llama2-13b":
         tokenizer = AutoTokenizer.from_pretrained(f"{args.pretrained_model_path}/Llama-2-13b-chat-hf")
-
+    elif args.edited_llm == "qwen2.5-7b":
+        tokenizer = AutoTokenizer.from_pretrained(f"{args.pretrained_model_path}/Qwen2.5-7B-Instruct")
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(f"{args.pretrained_model_path}/gpt2-xl")
     tokenizer.pad_token = tokenizer.eos_token
 
     # FT-M UNKE

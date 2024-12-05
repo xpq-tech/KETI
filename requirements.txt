@@ -5,3 +5,4 @@ scikit-learn
 PyYAML
 numpy
 protobuf
+seaborn

@@ -64,13 +64,13 @@ if __name__ == "__main__":
 
     # Save the metrics
     os.makedirs(args.res_save_dir, exist_ok=True)
-    res_path = f"{args.res_save_dir}/{args.editing_method.lower()}-{args.hparams_dir.split('/')[-1]}.json"
+    res_path = f"{args.res_save_dir}/edit/{args.editing_method.lower()}-{args.hparams_dir.split('/')[-1]}.json"
     LOG.info(f"Saving edited results to {res_path}")
     with open(res_path, "w") as f:
         json.dump(metrics, f, indent=4)
-
+    if args.editing_method != 'non-edit':
     # Save the edited model
-    edited_model_path = f"./edited_model/{args.editing_method.lower()}/{args.hparams_dir.split('/')[-1]}"
-    LOG.info(f"Saving edited model to {edited_model_path}")
-    os.makedirs(edited_model_path, exist_ok=True)
-    edited_model.save_pretrained(edited_model_path)
+        edited_model_path = f"./edited_model/{args.editing_method.lower()}/{args.hparams_dir.split('/')[-1]}"
+        LOG.info(f"Saving edited model to {edited_model_path}")
+        os.makedirs(edited_model_path, exist_ok=True)
+        edited_model.save_pretrained(edited_model_path)

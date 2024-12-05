@@ -140,7 +140,7 @@ def compute_z(
         )
         # weight_decay = hparams.v_weight_decay * torch.norm(delta) ** 2
         loss = nll_loss + weight_decay.to(nll_loss.device)
-        LOG.debug(
+        LOG.info(
            f"loss {np.round(loss.item(), 3)} = {np.round(nll_loss.item(), 3)}  + {np.round(weight_decay.item(), 3)} "
            f"avg prob of [{data['target_new']}] "
            f"{torch.exp(-nll_loss_each).mean().item()}"

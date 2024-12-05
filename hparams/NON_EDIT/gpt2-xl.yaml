@@ -1,0 +1,4 @@
+alg_name: "non-edit"
+model_name: "/science/llms/gpt2-xl"
+device: 0
+

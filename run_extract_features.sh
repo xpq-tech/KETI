@@ -26,8 +26,13 @@ if [[ "$use_rephrased" != "true" && "$use_rephrased" != "false" ]]; then
     usage
 fi
 # 定义所有参数的取值范围
-edit_methods=("ft" "grace" "unke")
-edited_llms=("llama3.1-8b" "llama2-13b")
+# edit_methods=("ft" "grace" "unke")
+# edited_llms=("llama3.1-8b" "llama2-13b" "qwen2.5-7b" "gpt2-xl")
+
+edit_methods=("grace")
+edited_llms=("qwen2.5-7b")
+
+
 
 # 遍历所有组合
 for edit_method in "${edit_methods[@]}"; do
@@ -37,13 +42,15 @@ for edit_method in "${edit_methods[@]}"; do
             echo "执行组合： extract_features edit_method=$edit_method, edited_llm=$edited_llm, rephrased=$use_rephrased"
             
             # 执行 Python 程序
-            CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm"  --rephrased --all_hidden_states
+            # CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm"  --rephrased --all_hidden_states
+            CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm"  --rephrased
         else
                             # 打印当前组合
             echo "extract_features edit_method=$edit_method, edited_llm=$edited_llm"
             
             # 执行 Python 程序
-            CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm" --all_hidden_states
+            # CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm" --all_hidden_states
+            CUDA_VISIBLE_DEVICES=$gpu_number python extract_features.py --edit_method "$edit_method" --edited_llm "$edited_llm"
         fi
     done
 done

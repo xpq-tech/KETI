@@ -27,7 +27,9 @@ type_mapping = {
 }
 llm_mapping = {
     "Meta-Llama-3.1-8B-Instruct": "llama3.1-8b",
-    "Llama-2-13b-chat-hf": "llama2-13b"
+    "Llama-2-13b-chat-hf": "llama2-13b",
+    "Qwen2.5-7B-Instruct": "qwen2.5-7b",
+    "gpt2-xl": "gpt2-xl"
 }
 
 LOG = logging.getLogger(__name__)
@@ -59,7 +61,7 @@ def train_model(model, dataloader, criterion, optimizer, num_epochs):
             top20_probs = batch['top20_probs'].to(device)
             labels = batch['label'].to(device)
             
-            outputs = model(input_ids, attention_mask, generated_input_ids, generated_attention_mask, top20_probs)
+            outputs = model(input_ids, attention_mask, generated_input_ids, generated_attention_mask, top20_probs.float())
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -82,7 +84,7 @@ def evaluate_model(model, dataloader):
             top20_probs = batch['top20_probs'].to(device)
             labels = batch['label'].to(device)
             
-            outputs = model(input_ids, attention_mask, generated_input_ids, generated_attention_mask, top20_probs)
+            outputs = model(input_ids, attention_mask, generated_input_ids, generated_attention_mask, top20_probs.float())
             _, preds = torch.max(outputs, dim=1)
             
             all_labels.extend(labels.cpu().numpy())
@@ -114,7 +116,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--method', default='BERT+LSTM', choices=['BERT', 'BERT+LSTM'], type=str)
     parser.add_argument('--edit_method', default='ft',choices=['ft','grace','unke'], type=str)
-    parser.add_argument('--edited_llm', default='Meta-Llama-3.1-8B-Instruct', choices=llm_mapping.keys(), type=str)
+    parser.add_argument('--edited_llm', default='gpt2-xl', choices=llm_mapping.keys(), type=str)
     parser.add_argument('--feature_dir', default='./features', type=str)
     parser.add_argument('--more_tokens', default=6, type=int)
     parser.add_argument('--log_level', default='INFO', type=str)
@@ -205,7 +207,7 @@ if __name__ == "__main__":
     accuracy, precision, recall, f1, cm = evaluate_model(model, test_dataloader)
 
     eval_res = f'Accuracy: {accuracy:.3f}\n' + f'Precision: {precision:.3f}\n' + f'Recall: {recall:.3f}\n' + f'F1 Score: {f1:.3f}\n' + f'Confusion Matrix:\n{cm}'
-    with open(f"./results/{args.method}_{args.edit_method}{f'_{args.feature_mode}'if args.feature_mode is not None else ''}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
+    with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/'}{args.method}_{args.edit_method}{f'_{args.feature_mode}'if args.feature_mode is not None else ''}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
         file.write(eval_res)
     print(eval_res)
 
