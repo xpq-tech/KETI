@@ -31,7 +31,8 @@ fi
 # methods=("linear" "MLP" "LDA" "LogR")
 methods=("LogR")
 edit_methods=("ft" "grace" "unke")
-edited_llms=("llama3.1-8b" "llama2-13b")
+edited_llms=("llama3.1-8b" "llama2-13b" "qwen2.5-7b" "gpt2-xl")
+
 test_features=("ft" "grace" "unke" "non-edit")
 
 # 遍历所有组合
@@ -65,7 +66,7 @@ done
 
 methods=("BERT+LSTM")
 edit_methods=("ft" "grace" "unke")
-edited_llms=("Meta-Llama-3.1-8B-Instruct" "Llama-2-13b-chat-hf")
+edited_llms=("Meta-Llama-3.1-8B-Instruct" "Llama-2-13b-chat-hf" "Qwen2.5-7B-Instruct" "gpt2-xl")
 test_features=("ft" "grace" "unke" "non-edit")
 
 # 遍历所有组合

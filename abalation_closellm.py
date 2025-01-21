@@ -36,8 +36,9 @@ type_mapping = {
 }
 llm_mapping = {
     "Llama-2-13b-chat-hf": "llama2-13b",
-    # "Meta-Llama-3.1-8B-Instruct": "llama3.1-8b",
-
+    "Meta-Llama-3.1-8B-Instruct": "llama3.1-8b",
+    "Qwen2.5-7B-Instruct": "qwen2.5-7b",
+    "gpt2-xl": "gpt2-xl"
 }
 
 LOG = logging.getLogger(__name__)

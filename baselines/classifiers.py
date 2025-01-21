@@ -97,7 +97,7 @@ class Bert_RNNBasedClassifier(nn.Module):
         generated_pooled_output = generated_output.pooler_output
         
         # RNN 部分
-        rnn_output, (hn, cn) = self.rnn(top20_probs)
+        rnn_output, (hn, cn) = self.rnn(top20_probs.float())
         rnn_last_hidden = hn[-1]  # 获取最后一层的隐藏状态
         
         # 拼接特征

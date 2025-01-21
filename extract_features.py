@@ -116,7 +116,7 @@ if __name__ == "__main__":
     parser.add_argument('--rephrased', default=False, action="store_true")
     parser.add_argument('--log_level', default='INFO', type=str)
     parser.add_argument('--edited_model_dir', default='./edited_model', type=str)
-    parser.add_argument('--pretrained_model_path', default="/data/llms/", type=str)
+    parser.add_argument('--pretrained_model_path', default="/science/llms/", type=str)
     parser.add_argument('--all_hidden_states', default=False, action="store_true")
 
 
@@ -152,6 +152,10 @@ if __name__ == "__main__":
     else:
         if args.edited_llm == "llama3.1-8b":
             edited_model = AutoModelForCausalLM.from_pretrained(f"{args.pretrained_model_path}/Meta-Llama-3.1-8B-Instruct").cuda()
+        elif args.edited_llm == "qwen2.5-7b":
+            edited_model = AutoModelForCausalLM.from_pretrained(f"{args.pretrained_model_path}/Qwen2.5-7B-Instruct").cuda()
+        elif args.edited_llm == "gpt2-xl":
+            edited_model = AutoModelForCausalLM.from_pretrained(f"{args.pretrained_model_path}/gpt2-xl").cuda()
         else:
             edited_model = AutoModelForCausalLM.from_pretrained(f"{args.pretrained_model_path}/Llama-2-13b-chat-hf").cuda()
 
