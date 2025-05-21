@@ -1,5 +1,5 @@
 # KETI
-This is the repository for our paper [Identifying Knowledge Editing Types in Large Language Models](https://arxiv.org/abs/2409.19663).
+**This is the official repository for our paper, *Identifying Knowledge Editing Types in Large Language Models* ([arXiv:2409.19663](https://arxiv.org/abs/2409.19663)), accepted to KDD 2025.**
 
 ## Requirements
 
