@@ -208,8 +208,12 @@ if __name__ == "__main__":
 
     conf_matrix = confusion_matrix(testset_labels, predictions)
     eval_res = f'Accuracy: {accuracy:.3f}\n' + f'Precision: {precision:.3f}\n' + f'Recall: {recall:.3f}\n' + f'F1 Score: {f1:.3f}' + f'\nConfusion Matrix:\n{conf_matrix}'
-    with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/'}{args.method}_{args.edit_method}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
-        file.write(eval_res)
+    if args.test_feature is not None:
+        with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/cross_domain/'}{args.method}_{f'{args.edit_method}_to_{args.test_feature}'}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
+            file.write(eval_res)
+    else:
+        with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/normal/'}{args.method}_{args.edit_method}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:
+            file.write(eval_res)
     print(eval_res)
     # 2. 输出混淆矩阵
     plot_confusion_matrix(conf_matrix, ['NE', "FU", "MI", "OI", "BMI", "BI"], f"./figs/cm_{args.method}_{args.edit_method}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.pdf")

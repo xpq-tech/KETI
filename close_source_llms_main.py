@@ -207,8 +207,12 @@ if __name__ == "__main__":
     accuracy, precision, recall, f1, cm = evaluate_model(model, test_dataloader)
 
     eval_res = f'Accuracy: {accuracy:.3f}\n' + f'Precision: {precision:.3f}\n' + f'Recall: {recall:.3f}\n' + f'F1 Score: {f1:.3f}\n' + f'Confusion Matrix:\n{cm}'
-    with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/'}{args.method}{f'+{args.feature_mode}'if args.feature_mode is not None else ''}_{args.edit_method}{f'_to_{args.test_feature}' if args.test_feature is not None else ''}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
-        file.write(eval_res)
+    if args.test_feature is not None:
+        with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/cross_domain/'}{args.method}{f'+{args.feature_mode}'if args.feature_mode is not None else ''}_{f'{args.edit_method}_to_{args.test_feature}'}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:  # 'w' 模式会覆盖文件内容，'a' 模式是追加内容
+            file.write(eval_res)
+    else:
+        with open(f"./results/baselines{'_rephrased/' if args.rephrased else '/normal/'}{args.method}{f'+{args.feature_mode}'if args.feature_mode is not None else ''}_{args.edit_method}_{args.edited_llm}{'_rephrased' if args.rephrased else ''}.txt", 'w') as file:
+            file.write(eval_res)
     print(eval_res)
 
 
